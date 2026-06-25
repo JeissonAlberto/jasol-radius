@@ -1,0 +1,17 @@
+FROM lirantal/daloradius:latest
+
+# Optimización de Performance PHP para Jasol Group
+RUN echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini && \
+    echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+
+# Placeholder para Branding (CSS/Logo override)
+# Aquí inyectamos el alma de Jasol Group en el frontend
+RUN sed -i 's/daloRADIUS/Jasol Group Network/g' /var/www/html/library/daloradius.conf.php && \
+    sed -i "s/\$configValues\['CONFIG_DB_USER'\] = 'root';/\$configValues\['CONFIG_DB_USER'\] = 'jasol_admin';/" /var/www/html/library/daloradius.conf.php
+
+# Script de Backup Automático (Diario a las 2 AM)
+RUN echo "0 2 * * * mysqldump -h jasol-db -u jasol_admin -p\${DB_PASSWORD} jasol_radius > /var/www/html/backup/jasol_backup_\$(date +\%F).sql" > /etc/cron.d/jasol-backup
+
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost/login.php || exit 1
