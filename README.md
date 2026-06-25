@@ -1,7 +1,7 @@
-# JASOL NEXUS - Network Intelligence System
+# JASOL AXON - Network Intelligence System
 
 ## Visión de Ingeniería (Top 0.01%)
-Este es **JASOL NEXUS**, el núcleo de gestión de red de Jasol Group. Diseñado bajo los principios de **Zero-Trust**, **Alta Disponibilidad** y **Experiencia de Usuario Simplificada**.
+Este es **JASOL AXON**, el sistema de gestión de red de **Jasol Group**, diseñado y desarrollado por el **Ing. Jeisson Alberto Sarmiento**.
 
 ### Arquitectura Seleccionada:
 - **Base de Datos:** MariaDB 11.8 (LTS) con Healthchecks nativos para prevenir fallos de arranque en frío.
