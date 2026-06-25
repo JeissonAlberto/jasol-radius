@@ -6,7 +6,8 @@ RUN echo "memory_limit = 512M" >> /usr/local/etc/php/conf.d/docker-php-memlimit.
 
 # Placeholder para Branding (CSS/Logo override)
 # Aquí inyectamos el alma de Jasol Group en el frontend
-RUN sed -i 's/daloRADIUS/JASOL NEXUS/g' /var/www/html/library/daloradius.conf.php && \
+RUN sed -i 's/daloRADIUS/JASOL AXON/g' /var/www/html/library/daloradius.conf.php && \
+    sed -i "s/radius/Ing. Jeisson Alberto Sarmiento/g" /var/www/html/library/daloradius.conf.php && \
     sed -i "s/\$configValues\['CONFIG_DB_USER'\] = 'root';/\$configValues\['CONFIG_DB_USER'\] = 'jasol_admin';/" /var/www/html/library/daloradius.conf.php
 
 # Script de Backup Automático (Diario a las 2 AM)
