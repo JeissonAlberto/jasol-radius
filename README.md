@@ -1,7 +1,7 @@
-# Jasol Group - Network Manager (RADIUS)
+# JASOL NEXUS - Network Intelligence System
 
 ## Visión de Ingeniería (Top 0.01%)
-Este repositorio ha sido diseñado bajo los principios de **Zero-Trust**, **Alta Disponibilidad** y **Experiencia de Usuario Simplificada**. No es solo un clon de daloRADIUS; es una implementación endurecida para producción.
+Este es **JASOL NEXUS**, el núcleo de gestión de red de Jasol Group. Diseñado bajo los principios de **Zero-Trust**, **Alta Disponibilidad** y **Experiencia de Usuario Simplificada**.
 
 ### Arquitectura Seleccionada:
 - **Base de Datos:** MariaDB 11.8 (LTS) con Healthchecks nativos para prevenir fallos de arranque en frío.
