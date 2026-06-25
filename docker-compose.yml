@@ -1,0 +1,75 @@
+services:
+  # 1. DATABASE: High-performance MariaDB with optimized buffers
+  jasol-db:
+    image: mariadb:11.8
+    container_name: jasol-db
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - MYSQL_DATABASE=jasol_radius
+      - MYSQL_USER=jasol_admin
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./backups:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # 2. RADIUS ENGINE: FreeRADIUS 3.x optimized for Jasol Group
+  jasol-radius:
+    image: lirantal/dalofreeradius
+    container_name: jasol-radius
+    restart: always
+    depends_on:
+      jasol-db:
+        condition: service_healthy
+    ports:
+      - "1812:1812/udp" # Auth
+      - "1813:1813/udp" # Acct
+    environment:
+      - TZ=America/Bogota
+      - MYSQL_HOST=jasol-db
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=jasol_radius
+      - MYSQL_USER=jasol_admin
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - DEFAULT_CLIENT_SECRET=${RADIUS_SECRET}
+    volumes:
+      - ./data/radius:/data
+      - radius-logs:/var/log/freeradius
+
+  # 3. WEB INTERFACE: Custom Jasol Group Branding & Optimized PHP
+  jasol-web:
+    build:
+      context: .
+      dockerfile: Dockerfile-web
+    container_name: jasol-web
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      jasol-db:
+        condition: service_healthy
+      jasol-radius:
+        condition: service_healthy
+    ports:
+      - "80:80"   # Main Portal
+      - "8000:80" # Operator Portal
+    environment:
+      - TZ=America/Bogota
+      - MYSQL_HOST=jasol-db
+      - MYSQL_DATABASE=jasol_radius
+      - MYSQL_USER=jasol_admin
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - APP_NAME="Jasol Group Network Manager"
+    volumes:
+      - ./data/web:/data
+      - ./backups/web:/var/www/html/backup:rw
+
+volumes:
+  radius-logs:
